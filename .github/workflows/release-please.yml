@@ -19,12 +19,6 @@ jobs:
           token: ${{ secrets.RELEASE_PR_TOKEN }}
           release-type: simple
 
-      - name: Extract Branch Name
-        run: echo "BRANCH_NAME=$(echo ${{ github.event.pull_request.head.ref }})" >> $GITHUB_ENV
-
-      - name: Replace Slashes in Branch Name
-        run: echo "BRANCH_NAME=${BRANCH_NAME//\//-}" >> $GITHUB_ENV
-
       - name: Create Custom Release Tag
         run: |
           TAG="23.11.${{ github.run_number }}-${{ env.BRANCH_NAME }}"
