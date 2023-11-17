@@ -18,9 +18,3 @@ jobs:
         with:
           token: ${{ secrets.RELEASE_PR_TOKEN }}
           release-type: simple
-
-      - name: Create Custom Release Tag
-        run: |
-          TAG="23.11.${{ github.run_number }}-${{ env.BRANCH_NAME }}"
-          git tag -a $TAG -m "Release $TAG"
-          git push origin $TAG
