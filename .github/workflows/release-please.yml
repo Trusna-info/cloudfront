@@ -10,6 +10,9 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v2
+
       - name: Run Release Please
         uses: GoogleCloudPlatform/release-please-action@v3
         with:
@@ -17,11 +20,13 @@ jobs:
           release-type: simple
 
       - name: Extract Branch Name
-        run: echo "BRANCH_NAME=$(echo ${{ github.ref }} | sed 's#refs/heads/##')" >> $GITHUB_ENV
+        run: echo "BRANCH_NAME=$(echo ${{ github.event.pull_request.head.ref }})" >> $GITHUB_ENV
+
+      - name: Replace Slashes in Branch Name
+        run: echo "BRANCH_NAME=${BRANCH_NAME//\//-}" >> $GITHUB_ENV
 
       - name: Create Custom Release Tag
         run: |
           TAG="23.11.${{ github.run_number }}-${{ env.BRANCH_NAME }}"
-          TAG=${TAG//\//-}  # Replace slashes with dashes in the tag
           git tag -a $TAG -m "Release $TAG"
           git push origin $TAG
